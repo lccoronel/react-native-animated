@@ -1,39 +1,37 @@
 import React from "react";
-import { StyleSheet, Dimensions } from "react-native";
-import Animated from "react-native-reanimated";
+import { Dimensions } from "react-native";
+import { useAnimatedStyle } from "react-native-reanimated";
+import { mix } from "react-native-redash";
 
 import { Card, Cards, StyleGuide } from "../../components";
-
-const { width } = Dimensions.get("window");
-const origin = -(width / 2 - StyleGuide.spacing * 2);
-const styles = StyleSheet.create({
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: StyleGuide.spacing * 4,
-  },
-});
+import { AnimatedContainer, absoluteStyleCards } from './animatedCardStyles'
 
 interface AnimatedCardProps {
-  toggled: boolean;
+  transition: any;
   index: number;
   card: Cards;
 }
 
-const AnimatedCard = ({ card, toggled, index }: AnimatedCardProps) => {
-  const alpha = toggled ? ((index - 1) * Math.PI) / 6 : 0;
-  const style = {
-    transform: [
-      { translateX: origin },
-      { rotate: `${alpha}rad` },
-      { translateX: -origin },
-    ],
-  };
+const AnimatedCard = ({ card, transition, index }: AnimatedCardProps) => {
+  const { width } = Dimensions.get("window");
+  const origin = -(width / 2 - StyleGuide.spacing * 2);
+
+  const style = useAnimatedStyle(() => {
+    const rotate = mix(transition.value, 0, ((index - 1) * Math.PI) / 6);
+
+    return {
+      transform: [
+        { translateX: origin },
+        { rotate, },
+        { translateX: -origin },
+      ]
+    }
+  });
+
   return (
-    <Animated.View key={card} style={[styles.overlay, style]}>
+    <AnimatedContainer key={card} style={[absoluteStyleCards.overlay, style]}>
       <Card {...{ card }} />
-    </Animated.View>
+    </AnimatedContainer>
   );
 };
 
