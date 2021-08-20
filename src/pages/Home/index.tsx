@@ -11,6 +11,10 @@ const Home: React.FC = () => {
       <ButtonPage onPress={() => navigate('Gesture')}>
         <TextButton>Pan Gesture</TextButton>
       </ButtonPage>
+
+      <ButtonPage onPress={() => navigate('Transitions')}>
+        <TextButton>Transitions</TextButton>
+      </ButtonPage>
     </Container>
   );
 }
